@@ -1,11 +1,20 @@
-const imageModules = import.meta.glob<{ default: { src: string } }>(
+import type { ImageMetadata } from "astro";
+
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   "../img/*.{avif,jpg,jpeg,png,webp}",
   { eager: true }
 );
 
-/** Uso: img("bota-soldador.avif") → URL lista para usar en <img src> */
-function img(filename: string): string {
-  return imageModules[`../img/${filename}`]?.default?.src ?? "";
+/**
+ * Uso: img("bota-soldador.avif") → ImageMetadata para <Image src={...} />
+ * Devuelve el metadata (no la URL) para que astro:assets pueda generar
+ * variantes responsive; pasar `.src` a un <img> crudo salta el optimizador
+ * y sirve el archivo original a tamaño completo.
+ */
+function img(filename: string): ImageMetadata {
+  const found = imageModules[`../img/${filename}`]?.default;
+  if (!found) throw new Error(`Imagen no encontrada en src/img: ${filename}`);
+  return found;
 }
 
 // ── TIPOS (no tocar) ─────────────────────────────────────────
@@ -244,7 +253,7 @@ export interface Product {
   name:        string;
   category:    string;
   price:       number; 
-  images:      string[];
+  images:      ImageMetadata[];
   highlights:  typeof DEFAULT_HIGHLIGHTS;
   description: string[];
   inStock:     boolean;
@@ -267,7 +276,7 @@ export const products: Product[] = CATALOG.map((entry) => ({
 }));
 
 // Auto-construye las categorías del megamenú desde el catálogo
-export interface CategoryItem { image: string; image2?: string; name: string }
+export interface CategoryItem { image: ImageMetadata; image2?: ImageMetadata; name: string }
 export interface Category {
   label:    string;
   href:     string;
@@ -275,7 +284,7 @@ export interface Category {
   products: string[];
 }
 
-/** Convierte un label de categoría al slug usado en ?categoria= */
+/** Convierte un label de categoría al slug usado en /categoria/[slug] y en ?categoria= */
 export function categorySlug(label: string): string {
   return label
     .toLowerCase()
@@ -286,12 +295,12 @@ export function categorySlug(label: string): string {
 }
 
 const CATEGORY_CONFIG: { label: CategoryName; href: string }[] = [
-  { label: "Calzado de Trabajo",   href: `/producto?categoria=${categorySlug("Calzado de Trabajo")}`   },
-  { label: "Uniformes de Trabajo", href: `/producto?categoria=${categorySlug("Uniformes de Trabajo")}` },
-  { label: "EPP",                  href: `/producto?categoria=${categorySlug("EPP")}`                  },
-  { label: "Hospitalaria",         href: `/producto?categoria=${categorySlug("Hospitalaria")}`         },
-  { label: "Gorros y Redecillas",  href: `/producto?categoria=${categorySlug("Gorros y Redecillas")}`  },
-  { label: "Promocionales",        href: `/producto?categoria=${categorySlug("Promocionales")}`        },
+  { label: "Calzado de Trabajo",   href: `/categoria/${categorySlug("Calzado de Trabajo")}`   },
+  { label: "Uniformes de Trabajo", href: `/categoria/${categorySlug("Uniformes de Trabajo")}` },
+  { label: "EPP",                  href: `/categoria/${categorySlug("EPP")}`                  },
+  { label: "Hospitalaria",         href: `/categoria/${categorySlug("Hospitalaria")}`         },
+  { label: "Gorros y Redecillas",  href: `/categoria/${categorySlug("Gorros y Redecillas")}`  },
+  { label: "Promocionales",        href: `/categoria/${categorySlug("Promocionales")}`        },
 ];
 
 export const categories: Category[] = CATEGORY_CONFIG.map(({ label, href }) => {
