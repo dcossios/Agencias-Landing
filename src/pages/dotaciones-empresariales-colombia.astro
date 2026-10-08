@@ -1,0 +1,246 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import Banner from "../components/Banner.astro";
+import heroImage from "../img/banner2.png";
+import { waHref, YEARS_IN_BUSINESS } from "../data/contact";
+
+const title = "Dotaciones Empresariales en Colombia | Agencias Nacionales";
+const description = "Dotaciones empresariales para compañías en Colombia: uniformes de trabajo, calzado de seguridad y EPP. Estandariza pedidos por cargo, sede y talla.";
+const quoteHref = waHref("Hola, quiero cotizar dotaciones empresariales para una compañía en Colombia. Necesito información sobre uniformes, calzado o EPP.");
+
+const faqs = [
+  {
+    question: "¿Realizan despachos de dotaciones a diferentes ciudades de Colombia?",
+    answer: "Sí. Atendemos pedidos empresariales con despacho nacional. La cobertura, el costo y las condiciones de entrega se confirman al preparar cada cotización.",
+  },
+  {
+    question: "¿Cuánto tarda la entrega de una dotación?",
+    answer: "Depende del producto. Los uniformes de línea y las referencias en inventario pueden entregarse de inmediato, según disponibilidad. Los uniformes especiales, que requieren fabricación, confección, bordado o estampado, tienen un plazo de hasta 45 días. El plazo exacto se confirma en la cotización.",
+  },
+  {
+    question: "¿Publican lista de precios?",
+    answer: "No. Cada dotación se cotiza según producto, cantidad, tallas, personalización y ciudad de entrega. Envíanos la solicitud y te enviamos una cotización formal para tu empresa.",
+  },
+  {
+    question: "¿Hay pedido mínimo?",
+    answer: "No hay pedido mínimo por producto. Para envíos, la compra mínima es de $500.000 sumando todos los productos del pedido.",
+  },
+  {
+    question: "¿Puedo consolidar uniformes, calzado y EPP en una sola solicitud?",
+    answer: "Sí. Puedes incluir varias categorías en la misma solicitud. Esto facilita revisar cantidades, tallas, especificaciones y ciudades de entrega antes de cotizar.",
+  },
+  {
+    question: "¿Cómo se organiza una dotación para varias sedes?",
+    answer: "Recomendamos consolidar la información por sede, cargo, producto, talla y cantidad. También debes indicar si cada sede requiere entregas o empaques separados.",
+  },
+  {
+    question: "¿Fabrican uniformes personalizados?",
+    answer: "Sí. Fabricamos uniformes de trabajo y evaluamos la personalización según la prenda, el logo, la cantidad y los requerimientos técnicos de la empresa.",
+  },
+  {
+    question: "¿Qué información necesitan para cotizar?",
+    answer: "Necesitamos la categoría de producto, las cantidades aproximadas, las tallas disponibles, la ciudad o ciudades de entrega, la fecha requerida y cualquier ficha técnica o requisito de personalización.",
+  },
+];
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Dotaciones empresariales en Colombia",
+  serviceType: "Fabricación y suministro de uniformes, calzado de seguridad y EPP para empresas",
+  url: "https://agenciasnacionales.com/dotaciones-empresariales-colombia/",
+  provider: {
+    "@type": "Organization",
+    name: "Agencias Nacionales S.A.S",
+    url: "https://agenciasnacionales.com/",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "Colombia",
+  },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  canonicalUrl="https://agenciasnacionales.com/dotaciones-empresariales-colombia/"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <Navbar />
+  <main>
+    <Banner
+      image={heroImage}
+      alt="Equipo de Agencias Nacionales preparando dotaciones empresariales"
+      eyebrow="Fabricación y suministro para empresas"
+      heading="Dotaciones empresariales para compañías en Colombia"
+      description="Centraliza uniformes de trabajo, calzado de seguridad y EPP para una sede o una operación nacional. Te ayudamos a organizar la solicitud por cargo, talla, cantidad y ciudad de entrega."
+      headingLevel="h1"
+      primaryAction={{ href: quoteHref, label: "Cotizar dotaciones por WhatsApp", newTab: true }}
+      secondaryAction={{ href: "/contacto/", label: "Enviar una solicitud detallada" }}
+      secondaryActionStyle="outline"
+    />
+
+    <section class="w-full bg-white px-4 pb-5 sm:px-6 lg:px-10">
+      <div class="mx-auto grid max-w-7xl gap-6 rounded-2xl border border-gray-100 bg-gray-50 px-6 py-7 text-sm text-gray-700 sm:grid-cols-3 sm:px-8">
+        <p><strong class="block text-base text-slate-950">{YEARS_IN_BUSINESS} años</strong> atendiendo necesidades de dotación empresarial.</p>
+        <p><strong class="block text-base text-slate-950">Uniformes de línea: entrega inmediata</strong> según disponibilidad. Uniformes especiales: hasta 45 días.</p>
+        <p><strong class="block text-base text-slate-950">Despachos nacionales</strong> con condiciones validadas en la cotización.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-24">
+      <div class="max-w-3xl">
+        <p class="text-m font-semibold text-blue-600">Catálogo empresarial</p>
+        <h2 class="mt-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl">Las categorías que necesita tu equipo</h2>
+        <p class="mt-4 text-m leading-relaxed text-gray-500">Consulta referencias disponibles y reúne las cantidades de cada sede antes de solicitar la propuesta.</p>
+      </div>
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        <a href="/categoria/uniformes-de-trabajo/" class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+          <h3 class="text-base font-bold text-gray-900">Uniformes empresariales</h3>
+          <p class="mt-3 text-m leading-relaxed text-black">Prendas operativas y administrativas con opciones de personalización para la identidad de tu empresa.</p>
+          <span class="mt-4 inline-flex items-center gap-1 text-m font-semibold text-blue-600 hover:text-blue-700">Explorar uniformes</span>
+        </a>
+        <a href="/categoria/calzado-de-trabajo/" class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+          <h3 class="text-base font-bold text-gray-900">Calzado de trabajo</h3>
+          <p class="mt-3 text-m leading-relaxed text-black">Referencias para labores industriales, alimentos, construcción y otros entornos de operación.</p>
+          <span class="mt-4 inline-flex items-center gap-1 text-m font-semibold text-blue-600 hover:text-blue-700">Explorar calzado</span>
+        </a>
+        <a href="/categoria/epp/" class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:shadow-md">
+          <h3 class="text-base font-bold text-gray-900">EPP</h3>
+          <p class="mt-3 text-m leading-relaxed text-black">Elementos de protección para diferentes partes del cuerpo y condiciones de riesgo laboral.</p>
+          <span class="mt-4 inline-flex items-center gap-1 text-m font-semibold text-blue-600 hover:text-blue-700">Explorar EPP</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="w-full bg-white px-4 py-5 sm:px-6 lg:px-10">
+      <div class="mx-auto max-w-7xl rounded-2xl bg-gray-50 px-7 py-12 sm:px-10 lg:px-12 lg:py-16">
+        <div class="grid gap-12 lg:grid-cols-2">
+          <div>
+            <p class="text-m font-semibold text-blue-600">Pedidos por varias sedes</p>
+            <h2 class="mt-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl">Estandariza la dotación antes de comprar</h2>
+            <p class="mt-4 text-m leading-relaxed text-gray-500">Un pedido nacional necesita una estructura clara. Define qué recibe cada cargo y consolida la información en una matriz para evitar referencias duplicadas, faltantes y cambios de última hora.</p>
+            <a href="/articulos-del-blog/como-estandarizar-dotaciones-por-cargo-y-area/" class="mt-5 inline-flex items-center gap-1 text-m font-semibold text-blue-600 transition hover:text-blue-700">Ver guía para estandarizar dotaciones</a>
+          </div>
+          <ol class="space-y-4">
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"><strong class="text-base text-gray-900">1. Cargos y condiciones de trabajo</strong><p class="mt-3 text-m leading-relaxed text-black">Define las prendas, el calzado y la protección necesaria para cada función.</p></li>
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"><strong class="text-base text-gray-900">2. Sedes, cantidades y tallas</strong><p class="mt-3 text-m leading-relaxed text-black">Consolida la demanda por ciudad para revisar el total antes de cotizar.</p></li>
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"><strong class="text-base text-gray-900">3. Personalización y entrega</strong><p class="mt-3 text-m leading-relaxed text-black">Incluye logos, fichas técnicas, fechas requeridas y condiciones de separación por sede.</p></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <p class="text-m font-semibold text-blue-600">Preguntas frecuentes</p>
+          <h2 class="mt-2 text-3xl font-extrabold leading-tight text-gray-900 sm:text-4xl">Cotización y cobertura nacional</h2>
+        </div>
+        <div class="flex flex-col gap-3">
+          {faqs.map((faq) => (
+            <div class="national-faq-item rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md">
+              <button
+                type="button"
+                class="national-faq-button flex w-full cursor-pointer items-center justify-between gap-1.5 text-left font-medium text-gray-900 outline-none"
+                aria-expanded="false"
+              >
+                <h3 class="pr-4 text-m">{faq.question}</h3>
+                <span class="relative h-5 w-5 shrink-0 text-gray-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="national-faq-icon-closed absolute inset-0 h-5 w-5 opacity-100 transition-opacity duration-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="national-faq-icon-opened absolute inset-0 h-5 w-5 opacity-0 transition-opacity duration-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                  </svg>
+                </span>
+              </button>
+              <div class="national-faq-content grid grid-rows-[0fr] transition-all duration-300 ease-in-out">
+                <div class="overflow-hidden">
+                  <p class="pt-4 text-m leading-relaxed text-gray-600">{faq.answer}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-5 pb-20 sm:px-8 lg:px-10">
+      <div class="rounded-2xl bg-blue-950 px-7 py-10 text-white sm:px-12 lg:flex lg:items-center lg:justify-between">
+        <div class="max-w-2xl">
+          <h2 class="text-3xl font-extrabold leading-tight sm:text-4xl">Prepara tu próxima solicitud de dotación</h2>
+          <p class="mt-3 text-m leading-relaxed text-blue-100">Comparte categorías, cantidades y ciudades. Revisaremos la información para orientar la cotización.</p>
+        </div>
+        <a href={quoteHref} target="_blank" rel="noopener noreferrer" class="mt-7 inline-flex rounded-full bg-white px-7 py-3.5 font-bold text-blue-800 transition hover:bg-blue-50 lg:mt-0">
+          Cotizar dotaciones empresariales
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  function initNationalFaq() {
+    const items = document.querySelectorAll<HTMLElement>(".national-faq-item");
+
+    items.forEach((item) => {
+      const button = item.querySelector<HTMLButtonElement>(".national-faq-button");
+      const content = item.querySelector<HTMLElement>(".national-faq-content");
+      const closedIcon = item.querySelector<HTMLElement>(".national-faq-icon-closed");
+      const openedIcon = item.querySelector<HTMLElement>(".national-faq-icon-opened");
+
+      button?.addEventListener("click", () => {
+        const isOpen = content?.classList.contains("grid-rows-[1fr]");
+
+        items.forEach((otherItem) => {
+          if (otherItem !== item) {
+            otherItem.querySelector(".national-faq-content")?.classList.replace("grid-rows-[1fr]", "grid-rows-[0fr]");
+            otherItem.querySelector(".national-faq-icon-closed")?.classList.replace("opacity-0", "opacity-100");
+            otherItem.querySelector(".national-faq-icon-opened")?.classList.replace("opacity-100", "opacity-0");
+            otherItem.querySelector<HTMLButtonElement>(".national-faq-button")?.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        content?.classList.replace(isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]", isOpen ? "grid-rows-[0fr]" : "grid-rows-[1fr]");
+        closedIcon?.classList.replace(isOpen ? "opacity-0" : "opacity-100", isOpen ? "opacity-100" : "opacity-0");
+        openedIcon?.classList.replace(isOpen ? "opacity-100" : "opacity-0", isOpen ? "opacity-0" : "opacity-100");
+        button?.setAttribute("aria-expanded", String(!isOpen));
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initNationalFaq);
+</script>

@@ -1,18 +1,102 @@
 ---
+import { Image } from "astro:assets";
 import logo from "../img/Logo.nav.avif";
-import { categories, productHref } from "../data/catalog";
-import p1 from "../img/Producto 1.avif";
-import p2 from "../img/Producto 2.avif";
-import p3 from "../img/Producto 3.avif";
-import p4 from "../img/Producto 4.avif";
-import p5 from "../img/Producto 5.avif";
+import { categories, products, productHref } from "../data/catalog";
+import { waHref } from "../data/contact";
 
 const links = [
-  { label: "Nosotros", href: "/nosotros" },
-  { label: "Contacto", href: "/contacto" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Blog", href: "/articulos" },
-  { label: "Política ambiental", href: "/politica_ambiental" },
+  { label: "Dotaciones", href: "/dotaciones-empresariales-colombia/" },
+  { label: "Nosotros", href: "/nosotros/" },
+  { label: "Blog", href: "/articulos/" },
+  { label: "Contacto", href: "/contacto/" },
+];
+const quoteHref = waHref("Hola, quiero cotizar dotaciones, calzado de seguridad o EPP para mi empresa.");
+
+const searchSections = [
+  {
+    type: "Sección",
+    title: "Productos",
+    subtitle: "Catálogo completo",
+    href: "/producto/",
+    keywords: ["productos", "catalogo", "catálogo", "todos"],
+  },
+  {
+    type: "Sección",
+    title: "Categorías",
+    subtitle: "Explora las categorías",
+    href: "/#categorias",
+    keywords: ["categorias", "categoría", "categoria"],
+  },
+  {
+    type: "Sección",
+    title: "Nosotros",
+    subtitle: "Conoce la empresa",
+    href: "/nosotros/",
+    keywords: ["nosotros", "empresa", "quienes somos"],
+  },
+  {
+    type: "Sección",
+    title: "Contacto",
+    subtitle: "Escríbenos para cotizar",
+    href: "/contacto/",
+    keywords: ["contacto", "whatsapp", "cotizar"],
+  },
+  {
+    type: "Sección",
+    title: "FAQ",
+    subtitle: "Preguntas frecuentes",
+    href: "/faq/",
+    keywords: ["faq", "preguntas", "frecuentes"],
+  },
+  {
+    type: "Sección",
+    title: "Blog",
+    subtitle: "Artículos y noticias",
+    href: "/articulos/",
+    keywords: ["blog", "articulos", "noticias"],
+  },
+  {
+    type: "Sección",
+    title: "Política ambiental",
+    subtitle: "Compromiso sostenible",
+    href: "/politica_ambiental/",
+    keywords: ["ambiental", "sostenibilidad", "politica"],
+  },
+];
+
+searchSections.unshift(
+  {
+    type: "Servicio",
+    title: "Dotaciones empresariales en Medellín",
+    subtitle: "Uniformes, calzado y EPP",
+    href: "/dotaciones-medellin/",
+    keywords: ["dotaciones medellin", "uniformes medellin"],
+  },
+  {
+    type: "Servicio",
+    title: "EPP en Colombia y Medellín",
+    subtitle: "Elementos de protección personal",
+    href: "/epp-colombia/",
+    keywords: ["epp colombia", "epp medellin", "seguridad industrial"],
+  },
+);
+
+const searchIndex = [
+  ...searchSections,
+  ...categories.map((category) => ({
+    type: "Categoría",
+    title: category.label,
+    subtitle: `${category.products.length} productos`,
+    href: category.href,
+    keywords: [category.label, ...category.products.slice(0, 6)],
+  })),
+  ...products.map((product) => ({
+    type: "Producto",
+    title: product.name,
+    subtitle: product.category,
+    href: productHref(product.name),
+    keywords: [product.name, product.category],
+  })),
 ];
 ---
 
@@ -23,14 +107,16 @@ const links = [
   <nav
     class="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8"
   >
-    <a href="../" class="flex shrink-0 items-center">
-      <img
-        src={logo.src}
+    <a href="/" class="flex shrink-0 items-center" aria-label="Agencias Nacionales, inicio">
+      <Image
+        src={logo}
         alt="Agencias Nacionales S.A.S"
-        width={logo.width}
-        height={logo.height}
+        widths={[216, 432]}
+        sizes="216px"
+        format="avif"
+        loading="eager"
         decoding="async"
-        class="h-16 w-auto"
+        class="h-14 w-auto"
       />
     </a>
 
@@ -48,37 +134,16 @@ const links = [
         ))
       }
     </ul>
-    <div class="relative hidden lg:block">
-      <svg
-        class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"></path>
-      </svg>
-      <input
-        type="search"
-        placeholder="Buscar"
-        class="w-56 rounded-full border border-gray-200 bg-gray-200 py-2.5 pl-11 pr-4 text-m text-gray-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-      />
-    </div>
-
-    <!-- Carrito + menu-toggle agrupados a la derecha -->
-    <div class="flex items-center gap-1">
-      <!-- Icono carrito (desktop y mobile) -->
-      <a
-        id="cart-open-btn"
-        href="/carrito"
-        aria-label="Ver carrito"
-        class="relative flex items-center justify-center rounded-full p-2 text-gray-600 hover:bg-gray-100 transition"
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        data-search-open
+        class="hidden items-center gap-2 rounded-full border border-gray-200 bg-gray-100 px-5 py-2.5 text-m text-gray-600 transition hover:border-gray-300 hover:bg-gray-200 lg:inline-flex"
+        aria-label="Abrir búsqueda"
+        aria-haspopup="dialog"
       >
         <svg
-          class="h-6 w-6"
+          class="h-5 w-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -87,14 +152,53 @@ const links = [
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.962-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-          ></path>
+            d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"></path>
+        </svg>
+        <span>Buscar</span>
+      </button>
+
+      <a
+        href={quoteHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden rounded-full bg-blue-950 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-800 lg:inline-flex"
+      >
+        Cotizar ahora
+      </a>
+
+      <button
+        type="button"
+        data-search-open
+        class="inline-flex items-center justify-center rounded-full border border-gray-200 bg-gray-200 p-2.5 text-gray-600 transition hover:border-gray-300 hover:bg-gray-100 lg:hidden"
+        aria-label="Abrir búsqueda"
+        aria-haspopup="dialog"
+      >
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"></path>
+        </svg>
+      </button>
+
+      <a
+        href="/carrito/"
+        aria-label="Ver carrito de cotizaciones"
+        class="relative inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2.5 text-gray-600 transition hover:border-gray-300 hover:bg-gray-100"
+      >
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.962-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
         </svg>
         <span
           id="cart-badge"
-          class="hidden absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center"
-          >0</span
-        >
+          class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-blue-600 px-1 text-center text-[10px] font-bold leading-5 text-white"
+        >0</span>
       </a>
 
       <button
@@ -102,6 +206,8 @@ const links = [
         id="menu-toggle"
         class="inline-flex items-center justify-center rounded-md p-2 text-gray-600 lg:hidden"
         aria-label="Abrir menú"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
       >
         <svg
           class="h-6 w-6"
@@ -117,22 +223,6 @@ const links = [
         </svg>
       </button>
     </div>
-
-    <script>
-      import { getCount } from "../scripts/cart.ts";
-
-      const updateCartBadge = () => {
-        const badge = document.getElementById("cart-badge");
-        if (!badge) return;
-
-        const count = getCount();
-        badge.textContent = String(count);
-        badge.classList.toggle("hidden", count === 0);
-      };
-
-      window.addEventListener("cart:updated", updateCartBadge);
-      updateCartBadge();
-    </script>
   </nav>
 
   <div id="categories-nav" class="hidden border-t border-gray-100 lg:block">
@@ -175,21 +265,21 @@ const links = [
                           {" "}
                           {/* 👈 */}
                           <div class="relative flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-gray-50">
-                            <img
+                            <Image
                               src={item.image}
                               alt={item.name}
-                              width="400"
-                              height="400"
+                              widths={[160, 320]}
+                              sizes="160px"
                               loading="lazy"
                               decoding="async"
                               class={`h-full w-full object-contain p-4 transition-opacity duration-200 ${item.image2 ? "group-hover/item:opacity-0" : ""}`}
                             />
                             {item.image2 && (
-                              <img
+                              <Image
                                 src={item.image2}
                                 alt={item.name}
-                                width="400"
-                                height="400"
+                                widths={[160, 320]}
+                                sizes="160px"
                                 loading="lazy"
                                 decoding="async"
                                 class="absolute inset-0 h-full w-full object-contain p-4 opacity-0 transition-opacity duration-200 group-hover/item:opacity-100"
@@ -255,28 +345,16 @@ const links = [
     class="mobile-menu hidden border-t border-gray-100 bg-white lg:hidden"
   >
     <div class="mobile-menu-inner">
-      <div class="px-4 py-3">
-        <div class="relative">
-          <svg
-            class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"></path>
-          </svg>
-          <input
-            type="search"
-            placeholder="Buscar"
-            class="w-full rounded-full border border-gray-200 bg-gray-50 py-2.5 pl-11 pr-4 text-m text-gray-700 outline-none focus:border-blue-500 focus:bg-white"
-          />
-        </div>
+      <div class="px-4 pt-4">
+        <a
+          href={quoteHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block rounded-full bg-blue-950 px-5 py-3 text-center font-bold text-white transition hover:bg-blue-800"
+        >
+          Cotizar por WhatsApp
+        </a>
       </div>
-
       <ul class="space-y-1 px-4 pb-3">
         {
           links.map((link) => (
@@ -309,6 +387,62 @@ const links = [
     </div>
   </div>
 </header>
+
+<div
+  id="search-modal"
+  class="search-modal hidden"
+  aria-hidden="true"
+  inert
+>
+  <button
+    type="button"
+    data-search-backdrop
+    class="fixed inset-0 h-screen w-screen cursor-default bg-black/60 backdrop-blur-[2px]"
+    aria-label="Cerrar búsqueda"
+  ></button>
+
+  <div class="pointer-events-none fixed inset-0 flex items-start justify-center px-4 pt-20 sm:pt-24">
+    <div class="search-panel pointer-events-auto w-full max-w-2xl overflow-hidden rounded-[28px] bg-white shadow-2xl shadow-black/20 ring-1 ring-black/5">
+      <div class="flex items-center gap-3 border-b border-gray-100 px-5 py-4">
+        <svg
+          class="h-5 w-5 shrink-0 text-gray-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"></path>
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Buscar productos, categorías o secciones"
+          autocomplete="off"
+          class="w-full border-0 bg-transparent text-base text-gray-800 outline-none placeholder:text-gray-400"
+        />
+        <button
+          type="button"
+          id="search-clear"
+          class="hidden shrink-0 rounded-full bg-gray-100 px-2.5 py-1.5 text-xs font-semibold text-gray-500 transition hover:bg-gray-200"
+        >
+          Limpiar
+        </button>
+      </div>
+
+      <div class="search-results-scroll max-h-[62vh] overflow-y-auto p-2">
+        <div class="flex items-center justify-between px-3 py-2">
+          <p id="search-hint" class="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+            Sugerencias
+          </p>
+        </div>
+        <div id="search-results" class="space-y-1 pb-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
   .mega-item:hover .mega-chevron {
@@ -378,6 +512,7 @@ const links = [
     top: 100%;
     left: 0;
     right: 0;
+    height: calc(100dvh - 4.5rem - 1px);
     z-index: 49;
     grid-template-rows: 0fr;
     transition:
@@ -398,130 +533,427 @@ const links = [
     overflow: hidden;
   }
 
+  .mobile-menu.is-open .mobile-menu-inner {
+    overflow-y: auto;
+  }
+
+  .search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .search-modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .search-panel {
+    transform: translateY(12px) scale(0.985);
+    transition:
+      transform 220ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 220ms ease;
+  }
+
+  .search-modal.is-open .search-panel {
+    transform: translateY(0) scale(1);
+  }
+
+  .search-result-card {
+    transition:
+      background-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .search-result-card:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+  }
+
+  .search-results-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .search-results-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .mobile-menu {
+      transition: none;
+    }
+
+    .search-modal,
+    .search-panel,
+    .search-result-card {
       transition: none;
     }
   }
 </style>
 
 <script>
-  const toggle = document.getElementById("menu-toggle");
-  const menu = document.getElementById("mobile-menu");
+  import { addToCart, getCount } from "../scripts/cart";
 
-  if (toggle && menu) {
-    let menuOpen = false;
-
-    const openMenu = () => {
-      menuOpen = true;
-      menu.classList.remove("hidden");
-      menu.style.display = "grid";
-      menu.getBoundingClientRect(); // forzar reflow (estado colapsado)
-      menu.classList.add("is-open"); // dispara el despliegue tipo cortina
-    };
-
-    const closeMenu = () => {
-      menuOpen = false;
-      menu.classList.remove("is-open"); // recoge la cortina
-    };
-
-    // Al terminar de recogerse, lo ocultamos del flujo
-    menu.addEventListener("transitionend", (e) => {
-      if (e.propertyName === "grid-template-rows" && !menuOpen) {
-        menu.style.display = "";
-        menu.classList.add("hidden");
-      }
-    });
-
-    toggle.addEventListener("click", () => {
-      if (menuOpen) closeMenu();
-      else openMenu();
-    });
-
-    // Cerrar el menÃº mÃ³vil al navegar (click en un link)
-    document.addEventListener("astro:before-swap", () => {
-      if (menuOpen) {
-        menuOpen = false;
-        menu.classList.remove("is-open");
-        menu.style.display = "";
-        menu.classList.add("hidden");
-      }
-    });
+  declare global {
+    interface Window {
+      __agenciasCartUiBound?: boolean;
+    }
   }
 
-  const catNav = document.getElementById("categories-nav");
+  const updateCartBadge = () => {
+    const badge = document.getElementById("cart-badge");
+    if (!badge) return;
 
-  if (catNav) {
-    const items = catNav.querySelectorAll(".mega-item");
-    let openDrop: HTMLElement | null = null;
+    const count = getCount();
+    badge.textContent = count > 99 ? "99+" : String(count);
+    badge.classList.toggle("hidden", count === 0);
+  };
 
-    // Reinicia y dispara la animación de movimiento de los productos
-    const animateContent = (drop: HTMLElement) => {
-      const inner = drop.querySelector(
-        ".mega-drop-inner > div",
-      ) as HTMLElement | null;
-      if (!inner) return;
-      inner.classList.remove("mega-anim");
-      void inner.offsetWidth; // reflow para reiniciar la animación
-      inner.classList.add("mega-anim");
+  if (!window.__agenciasCartUiBound) {
+    window.__agenciasCartUiBound = true;
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>("[data-add-to-cart]");
+      if (!button || button.disabled) return;
+
+      const { slug, name, image } = button.dataset;
+      if (!slug || !name || !image) return;
+
+      const wasAdded = addToCart({ slug, name, image });
+      if (wasAdded) {
+        window.gtag?.("event", "add_to_quote", {
+          item_id: slug,
+          item_name: name,
+        });
+      }
+
+      const label = button.querySelector<HTMLElement>("[data-cart-button-label]");
+      const previousLabel = label?.textContent ?? "Agregar a cotización";
+      if (label) {
+        label.textContent = wasAdded ? "Agregado a la cotización" : "Ya está en la cotización";
+      }
+      button.setAttribute("aria-live", "polite");
+      window.setTimeout(() => {
+        if (label) label.textContent = previousLabel;
+        button.removeAttribute("aria-live");
+      }, 1400);
+    });
+
+    window.addEventListener("cart:updated", updateCartBadge);
+    document.addEventListener("astro:page-load", updateCartBadge);
+  }
+
+  updateCartBadge();
+</script>
+
+<script is:inline define:vars={{ searchIndex }}>
+  (() => {
+    const searchEmptyState = {
+      title: "No encontramos resultados",
+      subtitle: "Prueba con otro término o busca por categoría.",
+      href: "/producto/",
+      type: "Sugerencia",
     };
 
-    // Abre con la cortina (desde cerrado)
-    const showDrop = (drop: HTMLElement) => {
-      drop.classList.add("is-open");
-      drop.style.zIndex = "50";
-      animateContent(drop);
-    };
+    const initNavbar = () => {
+      const normalized = (value) =>
+        value
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
 
-    // Cierra con la cortina (al salir del menú)
-    const hideDrop = (drop: HTMLElement) => {
-      drop.classList.remove("is-open");
-      drop.style.zIndex = "40";
-    };
+      const searchModal = document.getElementById("search-modal");
+      const searchInput = document.getElementById("search-input");
+      const searchResults = document.getElementById("search-results");
+      const searchHint = document.getElementById("search-hint");
+      const searchClear = document.getElementById("search-clear");
+      const searchBackdrop = document.querySelector("[data-search-backdrop]");
+      const searchTriggers = document.querySelectorAll("[data-search-open]");
+      const menuToggle = document.getElementById("menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const categoriesNav = document.getElementById("categories-nav");
 
-    // Muestra/oculta sin animación de cortina (cambio directo de categoría)
-    const setOpenInstant = (drop: HTMLElement, open: boolean) => {
-      drop.classList.add("no-anim");
-      drop.classList.toggle("is-open", open);
-      drop.style.zIndex = open ? "50" : "40";
-      drop.getBoundingClientRect(); // aplica el cambio sin transición
-      drop.classList.remove("no-anim");
-    };
+      if (!searchModal || !searchInput || !searchResults || !searchHint) {
+        return;
+      }
 
-    items.forEach(function (item) {
-      item.addEventListener("mouseenter", function () {
-        const drop = item.querySelector(".mega-drop") as HTMLElement | null;
+      window.__agenciasNavbarSearchController?.abort?.();
+      const controller = new AbortController();
+      window.__agenciasNavbarSearchController = controller;
+      const { signal } = controller;
 
-        if (drop) {
-          if (openDrop && openDrop !== drop) {
-            // Cambio directo: el panel no sube/baja, solo cambian los productos
-            setOpenInstant(openDrop, false);
-            setOpenInstant(drop, true);
-            animateContent(drop);
-          } else if (!openDrop) {
-            showDrop(drop);
-          }
-          openDrop = drop;
-        } else if (openDrop) {
-          hideDrop(openDrop);
-          openDrop = null;
+      const renderSearchResults = (query) => {
+        const q = normalized(query || "");
+        const ranked = searchIndex
+          .map((item) => {
+            const haystack = normalized(
+              [item.title, item.subtitle, ...(item.keywords || [])].join(" "),
+            );
+            if (q && !haystack.includes(q)) return null;
+
+            let score = 0;
+            if (!q) {
+              score = item.type === "Sección" ? 40 : item.type === "Categoría" ? 30 : 20;
+            } else {
+              if (normalized(item.title).startsWith(q)) score += 120;
+              if (normalized(item.title).includes(q)) score += 70;
+              if (normalized(item.subtitle).includes(q)) score += 25;
+              if ((item.keywords || []).some((keyword) => normalized(keyword).includes(q))) {
+                score += 20;
+              }
+              if (item.type === "Sección") score += 8;
+            }
+            return { ...item, score };
+          })
+          .filter(Boolean)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 8);
+
+        const items = ranked.length > 0 ? ranked : q ? [searchEmptyState] : [];
+
+        searchResults.innerHTML = "";
+        searchHint.textContent = q ? "Resultados" : "Sugerencias";
+
+        if (q && ranked.length === 0) {
+          const empty = document.createElement("div");
+          empty.className =
+            "mx-2 mb-2 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center";
+          empty.innerHTML =
+            `<p class="text-sm font-semibold text-gray-900">${searchEmptyState.title}</p>
+           <p class="mt-1 text-sm text-gray-500">${searchEmptyState.subtitle}</p>`;
+          searchResults.appendChild(empty);
+          return;
         }
-      });
-    });
 
-    catNav.addEventListener("mouseleave", function () {
-      if (openDrop) {
-        hideDrop(openDrop);
-        openDrop = null;
-      }
-    });
+        items.forEach((item) => {
+          const link = document.createElement("a");
+          link.href = item.href;
+          link.className =
+            "search-result-card mx-2 flex items-center gap-4 rounded-2xl px-4 py-3 text-left";
+          link.innerHTML = `
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gray-100 text-xs font-semibold uppercase tracking-widest text-gray-500">
+            ${item.type.slice(0, 3)}
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-base font-semibold text-gray-900">${item.title}</p>
+            <p class="mt-0.5 text-sm text-gray-500">${item.subtitle}</p>
+          </div>
+          <svg class="h-4 w-4 shrink-0 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+          </svg>
+        `;
+          link.addEventListener("click", closeSearch, { signal });
+          searchResults.appendChild(link);
+        });
+      };
 
-    // Cerrar el menÃº al navegar (click en un link), para ver el contenido
-    document.addEventListener("astro:before-swap", function () {
-      if (openDrop) {
-        setOpenInstant(openDrop, false);
-        openDrop = null;
+      const openSearch = () => {
+        searchModal.classList.remove("hidden");
+        searchModal.classList.add("is-open");
+        // El modal se marca aria-hidden/inert mientras esta cerrado porque
+        // conserva enlaces enfocables; hay que liberarlo al abrirlo o queda
+        // invisible para lectores de pantalla y fuera del orden de tabulacion.
+        searchModal.removeAttribute("aria-hidden");
+        searchModal.removeAttribute("inert");
+        if (searchClear) {
+          searchClear.classList.toggle(
+            "hidden",
+            searchInput.value.trim().length === 0,
+          );
+        }
+        renderSearchResults(searchInput.value || "");
+        window.setTimeout(() => searchInput.focus(), 30);
+      };
+
+      const closeSearch = () => {
+        searchModal.classList.remove("is-open");
+        searchModal.setAttribute("aria-hidden", "true");
+        searchModal.setAttribute("inert", "");
+        window.setTimeout(() => {
+          if (!searchModal.classList.contains("is-open")) {
+            searchModal.classList.add("hidden");
+          }
+        }, 180);
+      };
+
+      const clearSearch = () => {
+        searchInput.value = "";
+        searchClear?.classList.add("hidden");
+        renderSearchResults("");
+        searchInput.focus();
+      };
+
+      searchTriggers.forEach((trigger) =>
+        trigger.addEventListener("click", openSearch, { signal }),
+      );
+      searchBackdrop?.addEventListener("click", closeSearch, { signal });
+      searchClear?.addEventListener("click", clearSearch, { signal });
+      searchInput.addEventListener(
+        "input",
+        () => {
+          searchClear?.classList.toggle("hidden", searchInput.value.trim().length === 0);
+          renderSearchResults(searchInput.value);
+        },
+        { signal },
+      );
+      searchInput.addEventListener(
+        "keydown",
+        (event) => {
+          if (event.key === "Escape") closeSearch();
+        },
+        { signal },
+      );
+      document.addEventListener(
+        "keydown",
+        (event) => {
+          if (event.key === "Escape") closeSearch();
+        },
+        { signal },
+      );
+
+      if (menuToggle && mobileMenu) {
+        let menuOpen = false;
+
+        // El header se conserva entre rutas con transition:persist. Restablecemos
+        // el menú por si la navegación ocurrió mientras estaba desplegado.
+        mobileMenu.classList.remove("is-open");
+        mobileMenu.classList.add("hidden");
+        mobileMenu.style.display = "";
+        menuToggle.setAttribute("aria-expanded", "false");
+
+        const openMenu = () => {
+          menuOpen = true;
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.style.display = "grid";
+          mobileMenu.getBoundingClientRect();
+          mobileMenu.classList.add("is-open");
+          menuToggle.setAttribute("aria-expanded", "true");
+        };
+
+        const closeMenu = () => {
+          menuOpen = false;
+          mobileMenu.classList.remove("is-open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        };
+
+        mobileMenu.addEventListener(
+          "transitionend",
+          (e) => {
+            if (e.propertyName === "grid-template-rows" && !menuOpen) {
+              mobileMenu.style.display = "";
+              mobileMenu.classList.add("hidden");
+            }
+          },
+          { signal },
+        );
+
+        menuToggle.addEventListener(
+          "click",
+          () => {
+            if (menuOpen) closeMenu();
+            else openMenu();
+          },
+          { signal },
+        );
+
+        mobileMenu.querySelectorAll("a").forEach((link) =>
+          link.addEventListener("click", closeMenu, { signal }),
+        );
+        document.addEventListener("astro:before-swap", closeMenu, { signal });
+        document.addEventListener("astro:page-load", closeMenu, { signal });
       }
-    });
-  }
+
+      if (categoriesNav) {
+        const items = categoriesNav.querySelectorAll(".mega-item");
+        let openDrop = null;
+        let closeTimer = null;
+
+        const animateContent = (drop) => {
+          const inner = drop.querySelector(".mega-drop-inner > div");
+          if (!inner) return;
+          inner.classList.remove("mega-anim");
+          void inner.offsetWidth;
+          inner.classList.add("mega-anim");
+        };
+
+        const showDrop = (drop) => {
+          drop.classList.add("is-open");
+          drop.style.zIndex = "50";
+          animateContent(drop);
+        };
+
+        const hideDrop = (drop) => {
+          drop.classList.remove("is-open");
+          drop.style.zIndex = "40";
+        };
+
+        const setOpenInstant = (drop, open) => {
+          drop.classList.add("no-anim");
+          drop.classList.toggle("is-open", open);
+          drop.style.zIndex = open ? "50" : "40";
+          drop.getBoundingClientRect();
+          drop.classList.remove("no-anim");
+        };
+
+        const cancelClose = () => {
+          if (closeTimer) {
+            window.clearTimeout(closeTimer);
+            closeTimer = null;
+          }
+        };
+
+        const scheduleClose = () => {
+          cancelClose();
+          closeTimer = window.setTimeout(() => {
+            if (openDrop) {
+              hideDrop(openDrop);
+              openDrop = null;
+            }
+          }, 120);
+        };
+
+        categoriesNav.addEventListener("mouseenter", cancelClose, { signal });
+        categoriesNav.addEventListener("mouseleave", scheduleClose, { signal });
+
+        items.forEach((item) => {
+          const drop = item.querySelector(".mega-drop");
+
+          item.addEventListener(
+            "mouseenter",
+            () => {
+              if (drop) {
+                cancelClose();
+                if (openDrop && openDrop !== drop) {
+                  setOpenInstant(openDrop, false);
+                  setOpenInstant(drop, true);
+                  animateContent(drop);
+                } else if (!openDrop) {
+                  showDrop(drop);
+                }
+                openDrop = drop;
+              } else if (openDrop) {
+                hideDrop(openDrop);
+                openDrop = null;
+              }
+            },
+            { signal },
+          );
+        });
+      }
+    };
+
+    initNavbar();
+
+    if (!window.__agenciasNavbarSearchPageLoadBound) {
+      window.__agenciasNavbarSearchPageLoadBound = true;
+      document.addEventListener("astro:page-load", initNavbar);
+    }
+  })();
 </script>

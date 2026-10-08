@@ -13,13 +13,12 @@ import FAQ from "../components/FAQ.astro";
 import Blog from "../components/Blog.astro";
 import BannerFooter from "../components/BannerFooter.astro";
 import Footer from "../components/Footer.astro";
-import heroBanner from "../img/banner1.optimized.avif";
 ---
 
-<Layout>
-  <Fragment slot="head">
-    <link rel="preload" as="image" href={heroBanner.src} fetchpriority="high" />
-  </Fragment>
+<Layout
+  title="Dotaciones Empresariales, Calzado y EPP | Agencias Nacionales"
+  description="Dotaciones para empresas en Medellín y Colombia: uniformes de trabajo, calzado de seguridad y EPP. Atención desde nuestra sede en Envigado. Cotiza con nosotros."
+>
   <Navbar />
   <main class="w-full">
     <Hero />

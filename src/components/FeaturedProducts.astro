@@ -1,26 +1,23 @@
 ---
-import { products, productHref } from "../data/catalog";
+import { Image } from "astro:assets";
+import { products, productHref, type Product } from "../data/catalog";
 
-// Muestra los primeros 4 productos del catálogo
-const featured = products.slice(0, 4);
-
-function formatPrice(n: number) {
-  return new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(n);
+interface Props {
+  items?: Product[];
+  heading?: string;
 }
+
+const { items: featured = products.slice(0, 4), heading = "Los más frecuentes" } = Astro.props;
 ---
 
 <section id="productos" class="w-full px-4 py-8 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-7xl">
     <div class="flex items-center justify-between mb-8">
       <h2 class="text-2xl font-extrabold text-gray-900 sm:text-3xl">
-        Los más frecuentes
+        {heading}
       </h2>
       <a
-        href="/producto"
+        href="/producto/"
         class="flex items-center gap-1 text-m font-medium text-gray-500 hover:text-blue-600 transition-colors"
       >
         Ver todos
@@ -38,7 +35,6 @@ function formatPrice(n: number) {
     </div>
 
     <div class="relative">
-      <!-- Track con scroll horizontal en móvil, grid en desktop -->
       <div
         id="featured-track"
         class="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-4"
@@ -51,7 +47,9 @@ function formatPrice(n: number) {
               class="group flex w-56 shrink-0 snap-start flex-col sm:w-auto sm:shrink"
             >
               <div class="relative flex aspect-[3/4] items-center justify-center overflow-hidden rounded-2xl bg-gray-50 p-4">
-                <img
+                <Image
+                  widths={[224, 336, 448]}
+                  sizes="(min-width: 1024px) 280px, 224px"
                   src={product.images[0]}
                   alt={product.name}
                   loading="lazy"
@@ -62,7 +60,9 @@ function formatPrice(n: number) {
                   ]}
                 />
                 {product.images[1] && (
-                  <img
+                  <Image
+                    widths={[224, 336, 448]}
+                    sizes="(min-width: 1024px) 280px, 224px"
                     src={product.images[1]}
                     alt={product.name}
                     loading="lazy"
@@ -72,22 +72,16 @@ function formatPrice(n: number) {
                 )}
               </div>
               <div class="mt-3">
-                <p class="text-xs text-gray-400 mb-0.5">{product.category}</p>
+                <p class="text-xs text-gray-500 mb-0.5">{product.category}</p>
                 <h3 class="text-m text-gray-700 line-clamp-2 group-hover:text-blue-600 transition-colors">
                   {product.name}
                 </h3>
-                <div class="mt-1">
-                  <p class="text-m font-bold text-gray-900">
-                    {formatPrice(product.price)}
-                  </p>
-                </div>
               </div>
             </a>
           ))
         }
       </div>
 
-      <!-- Botón siguiente (visible solo en móvil/tablet donde hay scroll) -->
       <button
         id="featured-next"
         type="button"
@@ -119,7 +113,6 @@ function formatPrice(n: number) {
       track.scrollBy({ left: cardWidth + 20, behavior: "smooth" });
     });
 
-    // Ocultar botón al llegar al final
     track.addEventListener(
       "scroll",
       () => {
